@@ -1,4 +1,5 @@
 jsgame
 =====================
 #例子列表
-*[时钟](http://htmlpreview.github.io/?https://github.com/ligson/jsgame/blob/master/demo1/clock.html)
+* [时钟](https://rawgit.com/ligson/jsgame/master/demo1/clock.html)
+* [cocos2d游戏1](https://rawgit.com/ligson/jsgame/master/cocos2d-html5/demo2/index.html)

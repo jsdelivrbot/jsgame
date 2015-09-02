@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>xxx</title>
+    <script type="text/javascript" src="//cdn.bootcss.com/phaser/2.4.3/phaser.min.js"></script>
+</head>
+<body>
+<div id="stage"></div>
+<script type="text/javascript">
+    var game = new Phaser.Game(500, 500, Phaser.AUTO, 'stage'); //实例化game
+    game.States = {};
+    game.States.boot = function () {
+        this.preload = function () {
+            console.log("preload.........");
+            //以下为要加载的资源
+            game.load.image('background', 'assets/background.png'); //背景
+        };
+        this.create = function () {
+            //game.state.start('preload'); //跳转到资源加载页面
+            game.state.start("play");
+            console.log("---");
+        };
+    };
+
+    function timerCallback() {
+        console.log("--");
+    }
+    game.States.play = function () {
+        this.create = function () {
+            //game.add.tileSprite(0, 0, game.width, game.height, 'background').autoScroll(-10, 0); //背景图
+            var graphics = game.add.graphics(0, 0);
+
+            // draw a rectangle
+            graphics.beginFill(0xFF3300);
+            graphics.lineStyle(2, 0x0000FF, 0);
+            graphics.drawRect(0, 0, game.width, game.height);
+            graphics.endFill();
+
+            //var timer = new Timer(game,1);
+            game.time.events.repeat(1000, timerCallback, this);
+        };
+    };
+
+    function render() {
+        game.debug.text("Time until event: " + game.time.events.duration, 32, 32);
+
+    }
+
+    //添加state到游戏
+
+    game.state.add('boot', game.States.boot);
+    game.state.add('preload', game.States.preload);
+    //game.state.add('menu',game.States.menu);
+    game.state.add('play', game.States.play);
+    game.state.add('render', render);
+    game.state.start('boot'); //启动游戏
+</script>
+</body>
+</html>

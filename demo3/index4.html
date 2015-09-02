@@ -8,53 +8,38 @@
 <body>
 <div id="stage"></div>
 <script type="text/javascript">
-    var game = new Phaser.Game(500, 500, Phaser.AUTO, 'stage'); //实例化game
-    game.States = {};
-    game.States.boot = function () {
-        this.preload = function () {
-            console.log("preload.........");
-            //以下为要加载的资源
-            game.load.image('background', 'assets/background.png'); //背景
-        };
-        this.create = function () {
-            //game.state.start('preload'); //跳转到资源加载页面
-            game.state.start("play");
-            console.log("---");
-        };
-    };
-
-    function timerCallback() {
-        console.log("--");
+    var isGen = true;
+    var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'stage', {create: create, render: render});
+    function create() {
+        game.stage.backgroundColor = '#6688ee';
+        game.time.events.loop(game.rnd.integerInRange(50, 1000), updateCounter, this);
+        game.input.onDown.add(click, this);
     }
-    game.States.play = function () {
-        this.create = function () {
-            //game.add.tileSprite(0, 0, game.width, game.height, 'background').autoScroll(-10, 0); //背景图
-            var graphics = game.add.graphics(0, 0);
 
-            // draw a rectangle
-            graphics.beginFill(0xFF3300);
-            graphics.lineStyle(2, 0x0000FF, 0);
-            graphics.drawRect(0, 0, game.width, game.height);
-            graphics.endFill();
+    function click() {
+        if (!isGen) {
+            isGen = true;
+        }
+        //console.log("--");
+    }
+    function updateCounter() {
+        if (isGen) {
+            var r = game.rnd.integerInRange(0, 255);
+            var g = game.rnd.integerInRange(0, 255);
+            var b = game.rnd.integerInRange(0, 255);
+            console.log(r + "," + g + "," + b);
+            game.stage.backgroundColor = "rgb(" + r + "," + g + "," + b + ")";
+            isGen = false;
+        }
 
-            //var timer = new Timer(game,1);
-            game.time.events.repeat(1000, timerCallback, this);
-        };
-    };
+    }
+
 
     function render() {
-        game.debug.text("Time until event: " + game.time.events.duration, 32, 32);
+
+        //game.debug.text("Queued events: " + game.time.events.length + ' - click to remove', 32, 32);
 
     }
-
-    //添加state到游戏
-
-    game.state.add('boot', game.States.boot);
-    game.state.add('preload', game.States.preload);
-    //game.state.add('menu',game.States.menu);
-    game.state.add('play', game.States.play);
-    game.state.add('render', render);
-    game.state.start('boot'); //启动游戏
 </script>
 </body>
 </html>

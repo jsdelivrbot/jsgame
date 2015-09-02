@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>xxx</title>
+    <script type="text/javascript" src="../cocos2d-html5/external/box2d/box2d.js"></script>
+</head>
+<body>
+<canvas id="b2canvas" width="300" height="300" style="background:#000000;">
+
+</canvas>
+<script>
+    var b2Vec2 = Box2D.Common.Math.b2Vec2
+            , b2BodyDef = Box2D.Dynamics.b2BodyDef
+            , b2Body = Box2D.Dynamics.b2Body
+            , b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+            , b2Fixture = Box2D.Dynamics.b2Fixture
+            , b2World = Box2D.Dynamics.b2World
+            , b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+            , b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
+            , b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
+            , b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
+    var world = new Box2D.Dynamics.b2World(new b2Vec2(0, 0), true);
+
+
+    var bodyDef = new Box2D.Dynamics.b2BodyDef();
+    bodyDef.type = Box2D.Dynamics.b2Body.b2_dynamicBody;
+    bodyDef.position.Set(150, 150);
+
+
+    var fixDef = new b2FixtureDef;
+    fixDef.density = 1;//密度
+    fixDef.friction = 0.5;//摩擦力
+    fixDef.restitution = 1;//弹性碰撞恢复系数
+    fixDef.shape = new b2CircleShape(50);
+
+    var lun2 = world.CreateBody(bodyDef);
+    lun2.CreateFixture(fixDef);
+
+    //连接器
+    var myjoint = new b2RevoluteJointDef();
+    myjoint.bodyA = world;
+    myjoint.bodyB = lun2;
+    myjoint.localAnchorA.Set(-0.8, 0);
+    myjoint.enableMotor = true;
+    myjoint.maxMotorTorque = 200;
+    myjoint.motorSpeed = -50;
+    world.CreateJoint(myjoint);
+
+
+    var debugDraw = new b2DebugDraw();
+    debugDraw.SetSprite(document.getElementById("b2canvas").getContext("2d"));
+    //debugDraw.SetDrawScale(30.0);
+    debugDraw.SetFillAlpha(0.5);
+    debugDraw.SetLineThickness(1.0);
+    debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+    world.SetDebugDraw(debugDraw);
+
+    //update
+    (function update() {
+        world.Step(1 / 60, 10, 10);
+        world.DrawDebugData();
+        world.ClearForces();
+        setTimeout(arguments.callee, 1000 / 60);
+    })();
+</script>
+</body>
+</html>
